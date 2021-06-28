@@ -1,0 +1,20 @@
+#!/bin/bash
+git diff --staged | grep -v ^- | grep "console.log" 2> /dev/null 1> /dev/null
+if [ $? = 0 ]
+then
+      echo "${REDBOLD}/!\\Console.log detected /!\\"
+      echo "${REDBOLD}aborting..."
+      exit 1
+else
+      echo "${GREENBOLD} No console.log"
+fi
+
+git diff --staged | grep -v ^- | grep "<<<<<<< HEAD" 2> /dev/null 1> /dev/null
+if [ $? = 0 ]
+then
+      echo "${REDBOLD}/!\\ UNRESOLVED MERGE DETECTED /!\\"
+      echo "${REDBOLD}aborting..."
+      exit 1
+else
+      echo "${GREENBOLD} No unresolved merge"
+fi
