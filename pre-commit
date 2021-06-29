@@ -1,31 +1,18 @@
-#!/bin/bash
-BOLD=`tput bold`
-RED=`tput setaf 1`
-GREEN=`tput setaf 2`
-GREENBOLD=$BOLD$GREEN
-REDBOLD=$BOLD$RED
-RESET=`tput init`
+#!/usr/bin/python3
+import subprocess
+import sys
 
+banned=["console.log", "<<<< HEAD"]
 
-git diff --staged | grep -v ^- | grep "console.log" 2> /dev/null 1> /dev/null
-if [ $? = 0 ]
-then
-      echo "${REDBOLD}/!\\Console.log detected /!\\"
-      echo "${REDBOLD}aborting..."
-      exit 1
-else
-      echo "${GREENBOLD} No console.log"
-fi
+triggred=0
+result = subprocess.run(['git', 'diff', '--staged'], stdout=subprocess.PIPE)
+diff = result.stdout.decode("utf-8") 
+files = diff.split("diff --git a/")
+for file in files: 
+    for check in banned:
+        if check in file:
+            print(check + " detected in:")
+            print(file.split("\n")[0].split(" b/")[0])
+            triggred=1
 
-git diff --staged | grep -v ^- | grep "<<<<<<< HEAD" 2> /dev/null 1> /dev/null
-if [ $? = 0 ]
-then
-      echo "${REDBOLD}/!\\ UNRESOLVED MERGE DETECTED /!\\"
-      echo "${REDBOLD}aborting..."
-      exit 1
-else
-      echo "${GREENBOLD} No unresolved merge"
-fi
-
-
-echo $RESET
+sys.exit(triggred)
