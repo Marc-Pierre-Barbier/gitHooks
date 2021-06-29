@@ -9,8 +9,8 @@ class termColor:
     ERR = '\033[91m'
 
 
-# 1 = critical 0 = warning any other value => info
-banned=[["console.log",1], ["<<<< HEAD",1]]
+# 0 = critical 1 = warning any other value => info
+banned=[["console.log",0], ["<<<< HEAD",0]]
 
 triggred=0
 result = subprocess.run(['git', 'diff', '--staged'], stdout=subprocess.PIPE)
@@ -20,9 +20,9 @@ for file in files:
     for check in banned:
         if check[0] in file:
             code = "" # info => nocolor
-            if check[1] == 1:
-                code = termColor.ERR
             if check[1] == 0:
+                code = termColor.ERR
+            if check[1] == 1:
                 code = termColor.WARN
             print(code + check[0] + " detected in:")
             print(file.split("\n")[0].split(" b/")[0])
