@@ -2,7 +2,15 @@
 import subprocess
 import sys
 
-banned=["console.log", "<<<< HEAD"]
+class termColor:
+    INFO = '\033[94m'
+    GREEN = '\033[92m'
+    WARN = '\033[93m'
+    ERR = '\033[91m'
+
+
+# 1 = critical 0 = warning any other value => info
+banned=[["console.log",1], ["<<<< HEAD",1]]
 
 triggred=0
 result = subprocess.run(['git', 'diff', '--staged'], stdout=subprocess.PIPE)
@@ -10,8 +18,13 @@ diff = result.stdout.decode("utf-8")
 files = diff.split("diff --git a/")
 for file in files: 
     for check in banned:
-        if check in file:
-            print(check + " detected in:")
+        if check[0] in file:
+            code = "" # info => nocolor
+            if check[1] == 1:
+                code = termColor.ERR
+            if check[1] == 0:
+                code = termColor.WARN
+            print(code + check[0] + " detected in:")
             print(file.split("\n")[0].split(" b/")[0])
             triggred=1
 
