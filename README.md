@@ -6,4 +6,4 @@
 
 
 # windows
-you need to add a proxy hook that call this script with python
+you need to have python3.exe accecible from you path
