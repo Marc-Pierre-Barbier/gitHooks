@@ -26,6 +26,9 @@ for file in files:
                 code = termColor.WARN
             print(code + check[0] + " detected in:")
             print(file.split("\n")[0].split(" b/")[0])
-            triggred=1
+            if check[1] == 1 or check[1] == 0:
+                triggred=1
 
+if triggred == 1:
+    print(termColor.ERR + "Aborting...")
 sys.exit(triggred)
