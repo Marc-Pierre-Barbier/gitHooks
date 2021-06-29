@@ -6,4 +6,4 @@
 
 
 # windows
-you need to have python3.exe accecible from you path
+you need to have python3.exe accessible from your path
